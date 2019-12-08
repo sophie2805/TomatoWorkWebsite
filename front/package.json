@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack-dev-server --open"
+    "dev": "webpack-dev-server"
   },
   "keywords": [
     "TomatoWork"
@@ -13,12 +13,19 @@
   "author": "Sophie-Su Yutian",
   "license": "ISC",
   "devDependencies": {
+    "css-loader": "^3.2.1",
+    "file-loader": "^5.0.2",
+    "style-loader": "^1.0.1",
+    "url-loader": "^3.0.0",
     "vue": "^2.6.10",
+    "vue-loader": "^15.7.2",
+    "vue-template-compiler": "^2.6.10",
     "webpack": "^4.41.2",
     "webpack-server": "^0.1.2"
   },
   "dependencies": {
     "axios": "^0.19.0",
+    "element-ui": "^2.13.0",
     "vue-router": "^3.1.3"
   }
 }
