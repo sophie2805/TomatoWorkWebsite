@@ -10,5 +10,5 @@ Vue.use(VueBus);
 new Vue({
     el: '#app',
     render: h => h(App),
-    components:{App}
+    components: { App }
 })
