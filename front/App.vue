@@ -44,7 +44,7 @@
               <el-input
                 id="userInput"
                 v-model="input"
-                placeholder="xx分钟自行设定"
+                placeholder="1-60分钟..."
                 :disabled="inputDisable"
                 class="customizedInput"
               ></el-input>
@@ -124,7 +124,12 @@ export default {
   },
   watch: {
     input(val) {
-      this.duration = parseInt(val);
+      var temp = parseInt(val);
+      if (temp > 60) {
+        this.$message.info("大于60，将对60取模进行计时哦！");
+      }
+      this.duration = temp % 60;
+      this.input = this.duration;
       if (this.duration <= 9) {
         this.timeRemain = "0" + this.duration + ":00";
       } else {
