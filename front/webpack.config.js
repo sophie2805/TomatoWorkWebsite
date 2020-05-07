@@ -4,6 +4,8 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
+  mode: 'development',
+  devtool: 'inline-source-map',
   entry: './main.js',
   output: {
     path: path.join(__dirname, './dist'),
@@ -45,5 +47,17 @@ module.exports = {
   },
   plugins: [
     new VueLoaderPlugin()
-  ]
+  ],
+  devServer: {
+    host: 'localhost',
+    port: 8080,
+    hot: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:9867',//代理地址，这里设置的地址会代替axios中设置的baseURL
+        changeOrigin: true
+      }
+    }
+  }
+
 };

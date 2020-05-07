@@ -4,7 +4,14 @@
       <myHeader></myHeader>
     </el-header>
     <el-main>
-      <el-row style="text-align: center;">
+      <statisticModal :show.sync="statisticShow" v-if="statisticShow"></statisticModal>
+      <el-row name="arrow-btn-down" style="text-align: center;">
+        <el-button type="text" style="font-size: xx-large; color: coral;" @click="clickArrowBtn">
+          <i class="el-icon-arrow-down" />
+        </el-button>
+      </el-row>
+
+      <el-row name="reward-row" style="text-align: center;">
         <el-col>
           <svg
             v-for="n in records.tomato1"
@@ -35,7 +42,7 @@
           </svg>
         </el-col>
       </el-row>
-      <el-row style="text-align: center">
+      <el-row name="radio-selection-row" style="text-align: center">
         <el-col :span="24">
           <el-radio-group v-model="radio">
             <el-radio label="25" @change="xxx" :disabled="radio25">25分钟</el-radio>
@@ -52,12 +59,12 @@
           </el-radio-group>
         </el-col>
       </el-row>
-      <el-row>
+      <el-row name="count-down-row">
         <el-col :span="24" style="text-align: center; font-size: 200px; color: gray;">
           <div>{{this.timeRemain}}</div>
         </el-col>
       </el-row>
-      <el-row>
+      <el-row name="operation-btn-row">
         <el-col :span="24" style="text-align: center;">
           <el-button
             plain
@@ -70,9 +77,29 @@
       </el-row>
     </el-main>
     <el-footer>
-      <el-row style="text-align: center;">
+      <el-row style="text-align: center; position: relativel; margin-top:70px;">
         <el-col>
-          <span style="color: gray; font-size: smaller">Powered by Vue + SprintBoot + MySql(docker)</span>
+          <span>
+            <el-link
+              type="info"
+              :underline="false"
+              href="https://github.com/sophie2805/TomatoWorkBackend.git"
+              target="_blank"
+            >Github Backend Repo /</el-link>
+            <el-link
+              type="info"
+              :underline="false"
+              href="https://github.com/sophie2805/TomatoWorkWebsite.git"
+              target="_blank"
+            >Github Frontend Repo</el-link>
+          </span>
+        </el-col>
+      </el-row>
+      <el-row style="text-align: center; position: relativel">
+        <el-col>
+          <span
+            style="color: cadetblue;font-size: medium;font-family: fantasy;"
+          >Powered by Vue + SprintBoot + MySql(docker)</span>
         </el-col>
       </el-row>
     </el-footer>
@@ -93,12 +120,19 @@
   fill: currentColor;
   overflow: hidden;
 }
+
+.el-link.el-link--info {
+  font-size: medium !important;
+  color: darkgrey !important;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
 </style>
 
 <script>
 import myHeader from "./MyHeader.vue";
 import Worker from "./Component/timer.worker.js";
 import Numeral from "numeral";
+import statisticModal from "./Statistic.vue";
 
 export default {
   name: "app",
@@ -119,8 +153,14 @@ export default {
         tomato1: 0,
         tomato2: 0,
         potato: 0
-      }
+      },
+      actionItem: "Load",
+      statisticShow: false
     };
+  },
+  components: {
+    statisticModal,
+    myHeader
   },
   watch: {
     input(val) {
@@ -147,12 +187,42 @@ export default {
   beforeDestroy() {
     this.worker = null;
   },
-  components: {
-    myHeader
+  created() {
+    this.$axios.defaults.headers.get["Pragma"] = "no-cache";
+    this.$axios.defaults.headers.get["Cache-Control"] = "no-cache, no-store";
   },
-  created() {},
-  mounted() {},
+  mounted() {
+    this.getTomatoToken();
+  },
   methods: {
+    clickArrowBtn() {
+      this.statisticShow = !this.statisticShow;
+      this.addVisitorEntry("查看统计数据");
+    },
+    addVisitorEntry(aa) {
+      this.$axios({
+        method: "post",
+        url: "/api/statistic/addVisitorEntry",
+        headers: {
+          "Content-type": "application/json;charset=UTF-8"
+        },
+        params: {
+          actionItem: aa
+        }
+      })
+        .then(res => {})
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    getTomatoToken() {
+      this.$axios
+        .post("/api/statistic/load", {})
+        .then(res => {})
+        .catch(err => {
+          console.log(err);
+        });
+    },
     xxx(label) {
       if (label === "25") {
         this.duration = 25;
@@ -164,6 +234,8 @@ export default {
         this.duration = 0;
         this.timeRemain = "00:00";
       }
+      this.actionItem = "Radio";
+      this.addVisitorEntry("选择时长");
     },
     setTimer(val) {
       this.worker = new Worker();
@@ -212,8 +284,12 @@ export default {
       }
       console.log(this.duration);
       this.setTimer(this.duration);
+      this.actionItem = "Start";
+      this.addVisitorEntry("开始计时");
     },
     stop() {
+      this.actionItem = "Stop";
+      this.addVisitorEntry("停止计时");
       this.$confirm("剩余时间将被重置，确定停止？", "", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -233,6 +309,7 @@ export default {
           if (this.radio === "66") this.inputDisable = false;
           else this.inputDisable = true;
           document.getElementById("stopBtn").blur();
+          his.addVisitorEntry("结束计时");
         })
         .catch(() => {});
     }

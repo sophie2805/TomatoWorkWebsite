@@ -5,12 +5,13 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack-dev-server"
+    "dev": "webpack-dev-server",
+    "build": "webpack --config webpack-config.js"
   },
   "keywords": [
     "TomatoWork"
   ],
-  "author": "Sophie-Su Yutian",
+  "author": "Sophie - Su Yutian",
   "license": "ISC",
   "devDependencies": {
     "css-loader": "^3.2.1",
