@@ -4,14 +4,14 @@
       <myHeader></myHeader>
     </el-header>
     <el-main>
-      <statisticModal :show.sync="statisticShow" v-if="statisticShow"></statisticModal>
+      <transition name="el-zoom-in-top">
+        <statisticModal :show.sync="statisticShow" v-if="statisticShow"></statisticModal>
+      </transition>
       <el-row name="arrow-btn-down" style="text-align: center;">
-        <el-button type="text" style="font-size: xx-large; color: coral;" @click="clickArrowBtn">
-          <i class="el-icon-arrow-down" />
-        </el-button>
+        <el-button type="text" style="font-size: 40px; color: cadetblue;" @click="clickArrowBtn">⇣</el-button>
       </el-row>
 
-      <el-row name="reward-row" style="text-align: center;">
+      <el-row name="reward-row" style="text-align: center;padding-bottom: 40px;">
         <el-col>
           <svg
             v-for="n in records.tomato1"
