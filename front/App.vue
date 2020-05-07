@@ -8,7 +8,9 @@
         <statisticModal :show.sync="statisticShow" v-if="statisticShow"></statisticModal>
       </transition>
       <el-row name="arrow-btn-down" style="text-align: center;">
-        <el-button type="text" style="font-size: 40px; color: cadetblue;" @click="clickArrowBtn">⇣</el-button>
+        <el-button type="text" style="font-size: 40px; color: cadetblue;" @click="clickArrowBtn">
+          <i class="el-icon-caret-bottom" />
+        </el-button>
       </el-row>
 
       <el-row name="reward-row" style="text-align: center;padding-bottom: 40px;">

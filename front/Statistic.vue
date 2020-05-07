@@ -1,7 +1,13 @@
 <template>
-  <el-dialog title="访问统计" :visible="show" width="600px" @close="closeDialog" v-if="show">
+  <el-dialog :visible="show" width="600px" @close="closeDialog" v-if="show">
+    <span slot="title" style="color: darkgrey;">
+      <i class="el-icon-s-data" />访问统计
+    </span>
     <el-tabs type="border-card" :stretch="true" id="statistic-tabs">
       <el-tab-pane label="每日访问">
+        <span slot="lable" style="color: darkgrey;">
+          <i class="el-icon-s-data" />qqq
+        </span>
         <div name="wrapper-div">
           <el-table
             :data="dailyTable"
